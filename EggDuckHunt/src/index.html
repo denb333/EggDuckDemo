@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duck Egg Hunt</title>
+    <script src="https://code.playcanvas.com/playcanvas-stable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"></script>
+    <link rel="stylesheet" href="./styles/style.css">
+    <style>
+        .user-profile {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .user-profile:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: linear-gradient(45deg, #8E2DE2, #4A00E0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .name-input {
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            outline: none;
+            background: transparent;
+            border-bottom: 2px solid #4A00E0;
+            padding: 5px 0;
+            color: #333;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: rgba(51, 51, 51, 0.95);
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            white-space: nowrap;
+            text-align: left;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .tooltip p {
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        .tooltip p:first-child {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .logout-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #FF416C, #FF4B2B);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: linear-gradient(90deg, #FF4B2B, #FF416C);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="counter-container">
+        <div id="eggCounter" class="counter egg-counter">
+            <img src="../assets/duck/egg.png" alt="Egg">
+            <span>0</span>
+        </div>
+        <div id="coinCounter" class="counter coin-counter">
+            <img src="../assets/duck/coins/coin.png" alt="Coin">
+            <span>0</span>
+        </div>
+    </div>
+    <div class="icon-duck">
+        <img src="../assets/icon-duck.png" alt="Duck Icon">
+    </div>
+    <div class="icon-bag">
+        <img src="../assets/bag.png" alt="Bag Icon">
+    
+    <!-- Bag Popup -->
+    <div id="bagPopup" class="bag-popup">Your Store
+        <div class="exchange-container">
+            <div class="resource-display">
+                <div class="resource-item">
+                    <img src="../assets/duck/egg.png" alt="Egg" class="resource-icon">
+                    <span id="eggCount" class="resource-value">0</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../assets/duck/coins/coin.png" alt="Coin" class="resource-icon">
+                    <span id="coinCount" class="resource-value">0</span>
+                </div>
+            </div>
+            
+            <div class="control-buttons">
+                <button id="exchangeBtn" class="btn btn-exchange">Exchange Coins</button>
+            </div>
+            <div class="resource-display">
+                <div class="resource-item">
+                    <img src="../assets/duck/coins/coin.png" alt="Coin" class="resource-icon">
+                    <span id="duckcoinCount" class="resource-value">0</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../assets/icon-duck.png" alt="Duck" class="resource-icon">
+                    <span id="duckCount" class="resource-value">0</span>
+                </div>
+            </div>
+            
+            <div class="control-buttons">
+                <button id="buyDuckButton" class="btn btn-exchange">Buy Ducks</button>
+            </div>
+            <div class="">
+                <p>Yellow Ducks: <span id="yellowDuckCount">0</span></p>
+                <p>Red Ducks: <span id="redDuckCount">0</span></p>
+                <p>White Ducks: <span id="whiteDuckCount">0</span></p>
+            </div>
+        </div>
+
+  <!-- React + Babel -->
+       <!-- Contract Info -->
+      <div>
+        <h2>Contract Balance: <span id="contractBalance">0</span> ETH</h2>
+        <p>Connected Account: <span id="connectedAccount">Not connected</span></p>
+        <p>Contract Owner: <span id="contractOwner">Loading...</span></p>
+      </div>
+      
+   <!-- Nhúng script -->
+      <script src="./components/ContractInfo.js" type="module"></script>
+
+        <div>
+            <h2>Contract Actions</h2>
+            <p><strong>Your Balance:</strong> <span id="userBalance">0</span> ETH</p>
+    
+            <!-- Radio chọn hành động -->
+            <div>
+                <label>
+                    <input type="radio" value="deposit" name="action" id="depositRadio" checked>
+                    Deposit
+                </label>
+                <label>
+                    <input type="radio" value="withdraw" name="action" id="withdrawRadio">
+                    Withdraw
+                </label>
+            </div>
+    
+            <!-- Input chung -->
+            <div>
+                <input type="text" id="amountInput" placeholder="Amount in ETH">
+                <button id="actionButton">Deposit Funds</button>
+            </div>
+    
+            <!-- Convert Token -> ETH -->
+            <h3>Convert Token to ETH</h3>
+            <p><strong>Token Balance:</strong> <span id="tokenBalance">0</span> Xu</p>
+            <input type="text" id="convertAmountInput" placeholder="Enter token amount">
+            <button id="convertButton">Convert</button>
+        </div>
+    </div>
+    
+    <div class="user-profile" id="userProfile">
+        <div class="avatar" id="avatar"></div>
+        <p class="user-name" id="userName"></p>
+        <input type="text" id="nameInput" class="name-input" style="display: none;">
+
+        <div class="tooltip" id="tooltip">
+            <p>📌 Địa chỉ ví: <span id="shortAddress"></span></p>
+            <p>💰 Số dư: <span id="balance"></span> ETH</p>
+            <button id="logoutButton" class="logout-button">Đăng xuất</button>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="bgMusic" loop>
+        <source src="./../assets/sound/backgroundmusic.mp3" type="audio/mp3">
+    </audio>
+    <audio id="duckSound">
+        <source src="./../assets/sound/soundduck.mp3" type="audio/mp3">
+    </audio>
+ <!-- Scripts -->
+ <script type="module" src="./game.ts"></script>
+<script type="module" src="./UI/bad.ts"></script>
+<script type="module" src="./UI/change.ts"></script>
+<script type="module" src="./Egg/eggScheduler.ts"></script>
+<script type="module" src = "./Egg/eggLaying.ts"></script>
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userProfile = document.getElementById('userProfile');
+        const userName = document.getElementById('userName');
+        const nameInput = document.getElementById('nameInput');
+        const tooltip = document.getElementById('tooltip');
+        const shortAddress = document.getElementById('shortAddress');
+        const balanceElement = document.getElementById('balance');
+        const logoutButton = document.getElementById('logoutButton');
+        const avatar = document.getElementById('avatar');
+
+        let web3;
+    if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+    }
+
+    
+        const refreshBalance = async () => {
+        if (web3) {
+            try {
+                const userAddress = sessionStorage.getItem('userAddress');
+                if (userAddress) {
+                    const weiBalance = await web3.eth.getBalance(userAddress);
+                    const ethBalance = web3.utils.fromWei(weiBalance, 'ether');
+                    const balance = parseFloat(ethBalance).toFixed(4);
+                    
+                    // Update UI and sessionStorage
+                    balanceElement.textContent = balance;
+                    sessionStorage.setItem('userBalance', balance);
+                }
+            } catch (error) {
+                console.error("Error refreshing balance:", error);
+            }
+        }
+    };
+        // Load user data from sessionStorage
+        const loadUserData = () => {
+        const storedName = sessionStorage.getItem('userName');
+        const storedAddress = sessionStorage.getItem('shortAddress');
+        const storedBalance = sessionStorage.getItem('userBalance');
+        const storedInitial = sessionStorage.getItem('userInitial');
+        const fullAddress = sessionStorage.getItem('userAddress');
+        
+        // if (storedName && storedAddress) {
+        //     // Display user profile
+        //     userName.textContent = storedName;
+        //     shortAddress.textContent = storedAddress;
+        //     balanceElement.textContent = storedBalance || '0';
+        //     if (storedInitial) {
+        //         avatar.textContent = storedInitial;
+        //     } else if (storedName) {
+        //         avatar.textContent = storedName.charAt(0).toUpperCase();
+        //     }
+            
+        //     userProfile.style.display = 'flex';
+            
+        //     // Refresh balance from network
+        //     if (fullAddress) {
+        //         refreshBalance();
+        //     }
+        // } else {
+        //     // No user data found, redirect to login page
+        //     window.location.href = "../index.html";
+        // }
+    };
+        
+        const handleLogout = () => {
+    // Set logged out flag
+    sessionStorage.setItem('loggedOut', 'true');
+    
+    // Clear remaining session data
+    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('userAddress');
+    sessionStorage.removeItem('shortAddress');
+    sessionStorage.removeItem('userBalance');
+    sessionStorage.removeItem('userInitial');
+    
+    // Redirect to login page
+    window.location.href = "../index.html";
+};
+        
+        // Handle name editing
+        const handleEditName = () => {
+            userName.style.display = 'none';
+            nameInput.style.display = 'block';
+            nameInput.value = userName.textContent;
+            nameInput.focus();
+        };
+        
+        // Handle saving name
+        const handleSaveName = () => {
+            const newName = nameInput.value;
+            if (newName.trim() !== '') {
+                const userAddress = sessionStorage.getItem('userAddress');
+                if (userAddress) {
+                    localStorage.setItem(`walletName_${userAddress}`, newName);
+                    userName.textContent = newName;
+                    avatar.textContent = newName.charAt(0).toUpperCase();
+                    
+                    // Update name in sessionStorage
+                    sessionStorage.setItem('userName', newName);
+                    sessionStorage.setItem('userInitial', newName.charAt(0).toUpperCase());
+                }
+            }
+            nameInput.style.display = 'none';
+            userName.style.display = 'block';
+        };
+        
+        // Event listeners
+        logoutButton.addEventListener('click', handleLogout);
+        
+        // Double click to edit name
+        userName.addEventListener('dblclick', handleEditName);
+        
+        // Save on blur
+        nameInput.addEventListener('blur', handleSaveName);
+        nameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSaveName();
+            }
+        });
+        
+        // Show/hide tooltip
+        userProfile.addEventListener('mouseenter', () => {
+            tooltip.style.display = 'block';
+            setTimeout(() => {
+                tooltip.style.transform = 'translateY(0)';
+                tooltip.style.opacity = '1';
+            }, 50);
+        });
+        
+        userProfile.addEventListener('mouseleave', () => {
+            tooltip.style.transform = 'translateY(10px)';
+            tooltip.style.opacity = '0';
+            setTimeout(() => {
+                tooltip.style.display = 'none';
+            }, 300);
+        });
+        
+        // Load user data on page load
+        loadUserData();
+    });
+</script>
+<script type="module">
+    import { initialize } from "./components/ContractActions.js";
+</script>
+</body>
+</html>

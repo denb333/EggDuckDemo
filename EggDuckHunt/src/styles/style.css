@@ -1,0 +1,406 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: url('../../assets/Ground2.png') no-repeat center center fixed;
+    background-size: 2400px 1200px; /* Điều chỉnh chiều rộng và chiều cao của nền */
+    background-position: center;
+}
+
+
+/* Tạo hồ nước */
+.pond {
+    position: absolute;
+    width: 300px;
+    height: 120px;
+    background: rgba(0, 162, 232, 0.7); /* Màu xanh nước */
+    border-radius: 50%;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Cỏ xung quanh hồ */
+.grass {
+    position: absolute;
+    width: 120px;
+    left: 10%;
+    bottom: 15%;
+    z-index: 5;
+}
+
+/* Thay đổi style cho counter để hiển thị cả trứng và tiền */
+.counter-container {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+}
+
+.counter {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+}
+
+.egg-counter {
+    background: rgba(255, 255, 0, 0.8);
+}
+
+.coin-counter {
+    background: rgba(255, 215, 0, 0.8);
+}
+
+.counter img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.grass2 {
+    position: absolute;
+    width: 120px;
+    right: 10%;
+    bottom: 15%;
+    z-index: 5;
+}
+.bag-popup {
+    display: none;
+    position: absolute;
+    top: 80px;
+    right: 6%;
+    background: white;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+
+.icon-duck {
+    
+    display: flex;
+    position: absolute;
+    top: 7%;
+    left: 28%;
+    transform: translate(-50%, -50%); 
+}
+
+.icon-duck img {
+    width: 20%; /* 1/5 (20%) kích thước gốc */
+    height: auto; /* Giữ nguyên tỷ lệ */
+}
+
+.icon-bag {
+    display: flex;
+    position: absolute;
+    top: 5%;
+    right: -100px;
+    transform: translate(-50%, -50%); 
+}
+
+.icon-bag img {
+    width: 20%; /* 1/5 (20%) kích thước gốc */
+    height: auto; /* Giữ nguyên tỷ lệ */
+}
+
+
+
+/* Điều chỉnh lại vị trí rổ trứng trong hồ */
+.egg-basket {
+    position: absolute;
+    width: 50px;
+    height: 40px;
+    filter: contrast(120%) brightness(110%) saturate(120%);
+    transition: transform 0.3s ease-in-out;
+}
+.egg-basket:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 15px rgba(255, 255, 0, 0.6);
+}
+
+.basket1 { top: 72%; left: 46%; }
+.basket2 { top: 74%; left: 51%; }
+.basket3 { top: 76%; left: 56%; }
+
+/* Vịt */
+.duck {
+    position: absolute;
+    width: 60px;
+    height: auto;
+    z-index: 10;
+}
+
+.exchange-container {
+    right: -200px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+    width: 300px;
+}
+
+.resource-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.resource-item {
+    display: flex;
+    align-items: center;
+}
+
+.resource-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+}
+
+.resource-value {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.control-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.btn-exchange {
+    background-color: #2196F3;
+}
+
+.btn-exchange:hover {
+    background-color: #1E88E5;
+}
+
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.App {
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.login-container {
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.login-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.login-container h1 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+.login-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(90deg, #4776E6, #8E54E9);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    width: 100%;
+    margin-top: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.login-button:active {
+    transform: translateY(1px);
+}
+
+.login-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.login-button:hover::after {
+    left: 100%;
+}
+
+.user-profile {
+    position: absolute;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 15px;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background: linear-gradient(45deg, #8E2DE2, #4A00E0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.name-input {
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    background: transparent;
+    border-bottom: 2px solid #4A00E0;
+    padding: 5px 0;
+    color: #333;
+}
+
+.tooltip {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(51, 51, 51, 0.95);
+    color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    text-align: left;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    display: none;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.tooltip p {
+    margin: 0;
+    padding: 5px 0;
+}
+
+.tooltip p:first-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.logout-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #FF416C, #FF4B2B);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background: linear-gradient(90deg, #FF4B2B, #FF416C);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+}
+
+.game-logo {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #8E2DE2, #4A00E0);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.game-logo svg {
+    width: 80px;
+    height: 80px;
+    fill: white;
+}

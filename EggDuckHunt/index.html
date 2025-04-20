@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .App {
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .login-container {
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-container h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .login-button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(90deg, #4776E6, #8E54E9);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            width: 100%;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(1px);
+        }
+
+        .login-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .login-button:hover::after {
+            left: 100%;
+        }
+
+        .user-profile {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: linear-gradient(45deg, #8E2DE2, #4A00E0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .name-input {
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            outline: none;
+            background: transparent;
+            border-bottom: 2px solid #4A00E0;
+            padding: 5px 0;
+            color: #333;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: rgba(51, 51, 51, 0.95);
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            white-space: nowrap;
+            text-align: left;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .tooltip p {
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        .tooltip p:first-child {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .logout-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #FF416C, #FF4B2B);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: linear-gradient(90deg, #FF4B2B, #FF416C);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+        }
+
+        .game-logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #8E2DE2, #4A00E0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-logo svg {
+            width: 80px;
+            height: 80px;
+            fill: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="App" id="app">
+        <div class="login-container" id="loginContainer">
+            <div class="game-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                </svg>
+            </div>
+            <h1>Duck Egg Hunt</h1>
+            <button id="connectButton" class="login-button">Connect MetaMask & Play</button>
+        </div>
+
+        <div class="user-profile" id="userProfile" style="display: none;">
+            <div class="avatar" id="avatar"></div>
+            <p class="user-name" id="userName"></p>
+            <input type="text" id="nameInput" class="name-input" style="display: none;">
+
+            <div class="tooltip" id="tooltip">
+                <p>📌 Địa chỉ ví: <span id="shortAddress"></span></p>
+                <p>💰 Số dư: <span id="balance"></span> ETH</p>
+                <button id="logoutButton" class="logout-button">Đăng xuất</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script type="module" src="./src/components/ConnectWallet.js"></script>
+    
+</body>
+
+</html>
