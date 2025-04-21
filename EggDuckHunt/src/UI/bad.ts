@@ -24,6 +24,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const contractIcon = document.querySelector(".icon-contract");
+    const contractPopup = document.getElementById("contractPopup");
+
+    if (contractIcon && contractPopup) {
+        // Click vào icon thì hiện/ẩn popup
+        contractIcon.addEventListener("click", (event) => {
+            event.stopPropagation();
+            contractPopup.style.display = 
+                contractPopup.style.display === "none" || contractPopup.style.display === ""
+                ? "block"
+                : "none";
+        });
+
+        // Click bên trong popup không bị tắt
+        contractPopup.addEventListener("click", (event) => {
+            event.stopPropagation();
+        });
+
+        // Click ra ngoài thì popup ẩn
+        document.addEventListener("click", () => {
+            if (contractPopup.style.display === "block") {
+                contractPopup.style.display = "none";
+            }
+        });
+
+        // Khi load trang, ẩn popup trước
+        contractPopup.style.display = "none";
+    }
+});
 /**
  * Waits until the document is fully loaded, then sets up a click event for each duck.
  */

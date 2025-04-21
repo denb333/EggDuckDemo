@@ -122,19 +122,19 @@
             <span>0</span>
         </div>
     </div>
-    <div class="icon-duck">
+    <!-- <div class="icon-duck">
         <img src="../assets/icon-duck.png" alt="Duck Icon">
-    </div>
+    </div> -->
     <div class="icon-bag">
         <img src="../assets/bag.png" alt="Bag Icon">
-    
+    </div>
     <!-- Bag Popup -->
     <div id="bagPopup" class="bag-popup">Your Store
         <div class="exchange-container">
             <div class="resource-display">
                 <div class="resource-item">
                     <img src="../assets/duck/egg.png" alt="Egg" class="resource-icon">
-                    <span id="eggCount" class="resource-value">0</span>
+                    <input type="number" min="0" max="99" id="eggCount" class="egg-count" placeholder="0">
                 </div>
                 <div class="resource-item">
                     <img src="../assets/duck/coins/coin.png" alt="Coin" class="resource-icon">
@@ -151,23 +151,56 @@
                     <span id="duckcoinCount" class="resource-value">0</span>
                 </div>
                 <div class="resource-item">
-                    <img src="../assets/icon-duck.png" alt="Duck" class="resource-icon">
-                    <span id="duckCount" class="resource-value">0</span>
+                    <div class="duck-radio-group">
+                        <label class="duck-radio">
+                          <input type="radio" name="duckColor" value="yellow">
+                          <img src="../assets/icon-duck.png" alt="Yellow Duck" class="yellow-duck">
+                        </label>
+                      
+                        <label class="duck-radio">
+                          <input type="radio" name="duckColor" value="red">
+                          <img src="../assets/icon-duck.png" alt="Red Duck" class="red-duck">
+                        </label>
+                      
+                        <label class="duck-radio">
+                          <input type="radio" name="duckColor" value="white">
+                          <img src="../assets/icon-duck.png" alt="White Duck" class="white-duck">
+                        </label>
+                      </div>
+                      <input type="number" min="0" max="99" class="duck-count" placeholder="0">
                 </div>
             </div>
             
             <div class="control-buttons">
                 <button id="buyDuckButton" class="btn btn-exchange">Buy Ducks</button>
             </div>
-            <div class="">
-                <p>Yellow Ducks: <span id="yellowDuckCount">0</span></p>
+            <div class="list-Duck">
+                <div class="icon-duck-yellow">
+                    <img src="../assets/icon-duck.png" alt="Duck Icon">
+                    <span id="yellowDuckCount">0</span>
+                </div>
+                <div class="icon-duck-red">
+                    <img src="../assets/icon-duck.png" alt="Duck Icon">
+                    <span id="redDuckCount">0</span>
+                </div>
+                <div class="icon-duck-white">
+                    <img src="../assets/icon-duck.png" alt="Duck Icon">
+                    <span id="whiteDuckCount">0</span>
+                </div>
+                <!-- <p>Yellow Ducks: <span id="yellowDuckCount">0</span></p>
                 <p>Red Ducks: <span id="redDuckCount">0</span></p>
-                <p>White Ducks: <span id="whiteDuckCount">0</span></p>
+                <p>White Ducks: <span id="whiteDuckCount">0</span></p> -->
             </div>
         </div>
 
   <!-- React + Babel -->
        <!-- Contract Info -->
+    </div>
+
+    <div class="icon-contract">
+        <img src="../assets/contract.png" alt="Contract Icon">
+    </div>
+    <div id="contractPopup" class="contract-popup">
       <div>
         <h2>Contract Balance: <span id="contractBalance">0</span> ETH</h2>
         <p>Connected Account: <span id="connectedAccount">Not connected</span></p>
