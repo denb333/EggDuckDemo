@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,6 +60,8 @@
             color: #333;
         }
 
+        
+
         .tooltip {
             position: absolute;
             top: 60px;
@@ -109,17 +112,22 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
         }
+
+       
     </style>
 </head>
+
 <body>
     <div class="counter-container">
+        <!-- <div id="eggCounter" class="counter egg-counter"> -->
         <div id="eggCounter" class="counter egg-counter">
             <img src="../assets/duck/egg.png" alt="Egg">
-            <span>0</span>
+            <span id="tokenBalance1">0</span>
         </div>
         <div id="coinCounter" class="counter coin-counter">
-            <img src="../assets/duck/coins/coin.png" alt="Coin">
-            <span>0</span>
+            <!-- <img src="../assets/duck/coins/coin.png" alt="Coin"> -->
+            <img src="../assets/eth1.png" alt="Coin" class="resource-icon">
+            <span id="userBalance2">0</span>
         </div>
     </div>
     <!-- <div class="icon-duck">
@@ -137,40 +145,49 @@
                     <input type="number" min="0" max="99" id="eggCount" class="egg-count" placeholder="0">
                 </div>
                 <div class="resource-item">
-                    <img src="../assets/duck/coins/coin.png" alt="Coin" class="resource-icon">
-                    <span id="coinCount" class="resource-value">0</span>
+                    <br>
+                    <p><span id="userBalance1" class="resource-value"></span> ETH</p>
+
                 </div>
             </div>
-            
+
             <div class="control-buttons">
                 <button id="exchangeBtn" class="btn btn-exchange">Exchange Coins</button>
             </div>
             <div class="resource-display">
-                <div class="resource-item">
-                    <img src="../assets/duck/coins/coin.png" alt="Coin" class="resource-icon">
-                    <span id="duckcoinCount" class="resource-value">0</span>
+               
+                <div class="resource-item1" style="display: grid; grid-template-columns: auto auto; row-gap: 8px; column-gap: 16px; font-size: 16px;">
+                    <span class="duck-label">White:</span>
+                    <span class="duck-value"><span id="white" class="resource-value"></span> 0.005 ETH</span>
+                
+                    <span class="duck-label">Yellow:</span>
+                    <span class="duck-value"><span id="yellowPrice" class="resource-value"></span> 0.01 ETH</span>
+                
+                    <span class="duck-label">Red:</span>
+                    <span class="duck-value"><span id="redPrice" class="resource-value"></span> 0.015 ETH</span>
                 </div>
+                
                 <div class="resource-item">
                     <div class="duck-radio-group">
                         <label class="duck-radio">
-                          <input type="radio" name="duckColor" value="yellow">
-                          <img src="../assets/icon-duck.png" alt="Yellow Duck" class="yellow-duck">
+                            <input type="radio" name="duckColor" value="yellow">
+                            <img src="../assets/icon-duck.png" alt="Yellow Duck" class="yellow-duck">
                         </label>
-                      
+
                         <label class="duck-radio">
-                          <input type="radio" name="duckColor" value="red">
-                          <img src="../assets/icon-duck.png" alt="Red Duck" class="red-duck">
+                            <input type="radio" name="duckColor" value="red">
+                            <img src="../assets/icon-duck.png" alt="Red Duck" class="red-duck">
                         </label>
-                      
+
                         <label class="duck-radio">
-                          <input type="radio" name="duckColor" value="white">
-                          <img src="../assets/icon-duck.png" alt="White Duck" class="white-duck">
+                            <input type="radio" name="duckColor" value="white">
+                            <img src="../assets/icon-duck.png" alt="White Duck" class="white-duck">
                         </label>
-                      </div>
-                      <input type="number" min="0" max="99" class="duck-count" placeholder="0">
+                    </div>
+                    <input type="number" min="0" max="99" id="duckCount" placeholder="0">
                 </div>
             </div>
-            
+
             <div class="control-buttons">
                 <button id="buyDuckButton" class="btn btn-exchange">Buy Ducks</button>
             </div>
@@ -193,27 +210,27 @@
             </div>
         </div>
 
-  <!-- React + Babel -->
-       <!-- Contract Info -->
+        <!-- React + Babel -->
+        <!-- Contract Info -->
     </div>
 
     <div class="icon-contract">
         <img src="../assets/contract.png" alt="Contract Icon">
     </div>
     <div id="contractPopup" class="contract-popup">
-      <div>
+        <!-- <div>
         <h2>Contract Balance: <span id="contractBalance">0</span> ETH</h2>
         <p>Connected Account: <span id="connectedAccount">Not connected</span></p>
         <p>Contract Owner: <span id="contractOwner">Loading...</span></p>
-      </div>
-      
-   <!-- Nhúng script -->
-      <script src="./components/ContractInfo.js" type="module"></script>
+      </div> -->
+
+        <!-- Nhúng script -->
+        <script src="./components/ContractInfo.js" type="module"></script>
 
         <div>
             <h2>Contract Actions</h2>
             <p><strong>Your Balance:</strong> <span id="userBalance">0</span> ETH</p>
-    
+
             <!-- Radio chọn hành động -->
             <div>
                 <label>
@@ -225,13 +242,13 @@
                     Withdraw
                 </label>
             </div>
-    
+
             <!-- Input chung -->
             <div>
                 <input type="text" id="amountInput" placeholder="Amount in ETH">
                 <button id="actionButton">Deposit Funds</button>
             </div>
-    
+
             <!-- Convert Token -> ETH -->
             <h3>Convert Token to ETH</h3>
             <p><strong>Token Balance:</strong> <span id="tokenBalance">0</span> Xu</p>
@@ -239,7 +256,7 @@
             <button id="convertButton">Convert</button>
         </div>
     </div>
-    
+
     <div class="user-profile" id="userProfile">
         <div class="avatar" id="avatar"></div>
         <p class="user-name" id="userName"></p>
@@ -259,157 +276,178 @@
     <audio id="duckSound">
         <source src="./../assets/sound/soundduck.mp3" type="audio/mp3">
     </audio>
- <!-- Scripts -->
- <script type="module" src="./game.ts"></script>
-<script type="module" src="./UI/bad.ts"></script>
-<script type="module" src="./UI/change.ts"></script>
-<script type="module" src="./Egg/eggScheduler.ts"></script>
-<script type="module" src = "./Egg/eggLaying.ts"></script>
- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const userProfile = document.getElementById('userProfile');
-        const userName = document.getElementById('userName');
-        const nameInput = document.getElementById('nameInput');
-        const tooltip = document.getElementById('tooltip');
-        const shortAddress = document.getElementById('shortAddress');
-        const balanceElement = document.getElementById('balance');
-        const logoutButton = document.getElementById('logoutButton');
-        const avatar = document.getElementById('avatar');
+    <!-- Scripts -->
+    <script type="module" src="./game.ts"></script>
+    <script type="module" src="./UI/bad.ts"></script>
+    <script type="module" src="./UI/change.ts"></script>
+    <script type="module" src="./Egg/eggScheduler.ts"></script>
+    <script type="module" src="./Egg/eggLaying.ts"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userProfile = document.getElementById('userProfile');
+            const userName = document.getElementById('userName');
+            const nameInput = document.getElementById('nameInput');
+            const tooltip = document.getElementById('tooltip');
+            const shortAddress = document.getElementById('shortAddress');
+            const balanceElement = document.getElementById('balance');
+            const logoutButton = document.getElementById('logoutButton');
+            const avatar = document.getElementById('avatar');
 
-        let web3;
-    if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
-    }
+            let web3;
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                // Lắng nghe thay đổi tài khoản
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    if (accounts.length > 0) {
+                        const userAddress = accounts[0];
+                        const shortAddress = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+                        sessionStorage.setItem('userAddress', userAddress);
+                        sessionStorage.setItem('shortAddress', shortAddress);
+                        // Khôi phục tên từ localStorage khi tài khoản thay đổi
+                        const storedName = localStorage.getItem(`walletName_${userAddress}`);
+                        if (storedName) {
+                            sessionStorage.setItem('userName', storedName);
+                            sessionStorage.setItem('userInitial', storedName.charAt(0).toUpperCase());
+                        }
+                        refreshBalance();
+                    } else {
+                        handleLogout();
+                    }
+                });
+            }
 
-    
-        const refreshBalance = async () => {
-        if (web3) {
-            try {
-                const userAddress = sessionStorage.getItem('userAddress');
-                if (userAddress) {
+
+            const refreshBalance = async () => {
+                if (!web3) {
+                    console.error('Web3 not initialized. Please ensure MetaMask is installed.');
+                    balanceElement.textContent = '0';
+                    return;
+                }
+
+                try {
+                    const userAddress = sessionStorage.getItem('userAddress');
+                    if (!userAddress) {
+                        console.warn('No user address found in sessionStorage');
+                        balanceElement.textContent = '0';
+                        return;
+                    }
+
                     const weiBalance = await web3.eth.getBalance(userAddress);
                     const ethBalance = web3.utils.fromWei(weiBalance, 'ether');
                     const balance = parseFloat(ethBalance).toFixed(4);
-                    
-                    // Update UI and sessionStorage
+
+                    // Cập nhật UI và sessionStorage
                     balanceElement.textContent = balance;
                     sessionStorage.setItem('userBalance', balance);
+
+                    // Cập nhật popup (nếu cần)
+                    document.getElementById('userBalance').textContent = balance;
+                } catch (error) {
+                    console.error('Error refreshing balance:', error);
+                    balanceElement.textContent = '0';
                 }
-            } catch (error) {
-                console.error("Error refreshing balance:", error);
-            }
-        }
-    };
-        // Load user data from sessionStorage
-        const loadUserData = () => {
-        const storedName = sessionStorage.getItem('userName');
-        const storedAddress = sessionStorage.getItem('shortAddress');
-        const storedBalance = sessionStorage.getItem('userBalance');
-        const storedInitial = sessionStorage.getItem('userInitial');
-        const fullAddress = sessionStorage.getItem('userAddress');
-        
-        // if (storedName && storedAddress) {
-        //     // Display user profile
-        //     userName.textContent = storedName;
-        //     shortAddress.textContent = storedAddress;
-        //     balanceElement.textContent = storedBalance || '0';
-        //     if (storedInitial) {
-        //         avatar.textContent = storedInitial;
-        //     } else if (storedName) {
-        //         avatar.textContent = storedName.charAt(0).toUpperCase();
-        //     }
-            
-        //     userProfile.style.display = 'flex';
-            
-        //     // Refresh balance from network
-        //     if (fullAddress) {
-        //         refreshBalance();
-        //     }
-        // } else {
-        //     // No user data found, redirect to login page
-        //     window.location.href = "../index.html";
-        // }
-    };
-        
-        const handleLogout = () => {
-    // Set logged out flag
-    sessionStorage.setItem('loggedOut', 'true');
-    
-    // Clear remaining session data
-    sessionStorage.removeItem('userName');
-    sessionStorage.removeItem('userAddress');
-    sessionStorage.removeItem('shortAddress');
-    sessionStorage.removeItem('userBalance');
-    sessionStorage.removeItem('userInitial');
-    
-    // Redirect to login page
-    window.location.href = "../index.html";
-};
-        
-        // Handle name editing
-        const handleEditName = () => {
-            userName.style.display = 'none';
-            nameInput.style.display = 'block';
-            nameInput.value = userName.textContent;
-            nameInput.focus();
-        };
-        
-        // Handle saving name
-        const handleSaveName = () => {
-            const newName = nameInput.value;
-            if (newName.trim() !== '') {
-                const userAddress = sessionStorage.getItem('userAddress');
-                if (userAddress) {
-                    localStorage.setItem(`walletName_${userAddress}`, newName);
-                    userName.textContent = newName;
-                    avatar.textContent = newName.charAt(0).toUpperCase();
-                    
-                    // Update name in sessionStorage
-                    sessionStorage.setItem('userName', newName);
-                    sessionStorage.setItem('userInitial', newName.charAt(0).toUpperCase());
+            };
+
+            const loadUserData = () => {
+                const storedAddress = sessionStorage.getItem('shortAddress');
+                const storedBalance = sessionStorage.getItem('userBalance');
+                const storedInitial = sessionStorage.getItem('userInitial');
+                const fullAddress = sessionStorage.getItem('userAddress');
+
+                // Kiểm tra tên từ sessionStorage trước
+                let storedName = sessionStorage.getItem('userName');
+                // Nếu không có tên trong sessionStorage, kiểm tra localStorage
+                if (!storedName && fullAddress) {
+                    storedName = localStorage.getItem(`walletName_${fullAddress}`);
+                    if (storedName) {
+                        // Lưu tên vào sessionStorage để sử dụng trong phiên hiện tại
+                        sessionStorage.setItem('userName', storedName);
+                        sessionStorage.setItem('userInitial', storedName.charAt(0).toUpperCase());
+                    }
                 }
-            }
-            nameInput.style.display = 'none';
-            userName.style.display = 'block';
-        };
-        
-        // Event listeners
-        logoutButton.addEventListener('click', handleLogout);
-        
-        // Double click to edit name
-        userName.addEventListener('dblclick', handleEditName);
-        
-        // Save on blur
-        nameInput.addEventListener('blur', handleSaveName);
-        nameInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleSaveName();
-            }
+
+                // Hiển thị dữ liệu trong tooltip
+                userName.textContent = storedName || 'Guest';
+                shortAddress.textContent = storedAddress || 'Not connected';
+                balanceElement.textContent = storedBalance || '0';
+                avatar.textContent = storedInitial || storedName?.charAt(0).toUpperCase() || 'G';
+
+                userProfile.style.display = 'flex';
+
+                // Làm mới số dư nếu có địa chỉ ví
+                if (fullAddress) {
+                    refreshBalance();
+                } else {
+                    console.warn('No user address found in sessionStorage');
+                }
+            };
+
+            const handleLogout = () => {
+                sessionStorage.setItem('loggedOut', 'true');
+                sessionStorage.removeItem('userName');
+                sessionStorage.removeItem('userAddress');
+                sessionStorage.removeItem('shortAddress');
+                sessionStorage.removeItem('userBalance');
+                sessionStorage.removeItem('userInitial');
+                window.location.href = '../index.html';
+            };
+
+            const handleEditName = () => {
+                userName.style.display = 'none';
+                nameInput.style.display = 'block';
+                nameInput.value = userName.textContent;
+                nameInput.focus();
+            };
+
+            const handleSaveName = () => {
+                const newName = nameInput.value;
+                if (newName.trim() !== '') {
+                    const userAddress = sessionStorage.getItem('userAddress');
+                    if (userAddress) {
+                        localStorage.setItem(`walletName_${userAddress}`, newName);
+                        userName.textContent = newName;
+                        avatar.textContent = newName.charAt(0).toUpperCase();
+                        sessionStorage.setItem('userName', newName);
+                        sessionStorage.setItem('userInitial', newName.charAt(0).toUpperCase());
+                    }
+                }
+                nameInput.style.display = 'none';
+                userName.style.display = 'block';
+            };
+
+            // Event listeners
+            logoutButton.addEventListener('click', handleLogout);
+            userName.addEventListener('dblclick', handleEditName);
+            nameInput.addEventListener('blur', handleSaveName);
+            nameInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    handleSaveName();
+                }
+            });
+
+            userProfile.addEventListener('mouseenter', () => {
+                tooltip.style.display = 'block';
+                setTimeout(() => {
+                    tooltip.style.transform = 'translateY(0)';
+                    tooltip.style.opacity = '1';
+                }, 50);
+            });
+
+            userProfile.addEventListener('mouseleave', () => {
+                tooltip.style.transform = 'translateY(10px)';
+                tooltip.style.opacity = '0';
+                setTimeout(() => {
+                    tooltip.style.display = 'none';
+                }, 300);
+            });
+
+            // Load user data on page load
+            loadUserData();
         });
-        
-        // Show/hide tooltip
-        userProfile.addEventListener('mouseenter', () => {
-            tooltip.style.display = 'block';
-            setTimeout(() => {
-                tooltip.style.transform = 'translateY(0)';
-                tooltip.style.opacity = '1';
-            }, 50);
-        });
-        
-        userProfile.addEventListener('mouseleave', () => {
-            tooltip.style.transform = 'translateY(10px)';
-            tooltip.style.opacity = '0';
-            setTimeout(() => {
-                tooltip.style.display = 'none';
-            }, 300);
-        });
-        
-        // Load user data on page load
-        loadUserData();
-    });
-</script>
-<script type="module">
-    import { initialize } from "./components/ContractActions.js";
-</script>
+    </script>
+    <script type="module">
+        import { initialize } from "./components/ContractActions.js";
+    </script>
 </body>
+
 </html>

@@ -7,8 +7,7 @@ contract Lock {
 
     mapping(address => uint256) public tokenBalances; // Xu của người chơi
     mapping(address => uint256) public ethBalances;   // ETH đã quy đổi (chờ rút)
-
-    mapping(address => mapping(string => uint256)) public userDucks; // Số lượng duck theo loại cho từng user
+    mapping(address => mapping(string => uint256)) public userDucks; // Số lượng duck theo loại
     mapping(address => bool) public duckInitialized; // Đánh dấu user đã khởi tạo duck mặc định
 
     event TokenEarned(address indexed user, uint256 amount);
@@ -19,10 +18,7 @@ contract Lock {
     event DuckBought(address indexed user, string duckType, uint256 quantity);
 
     constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
+        require(block.timestamp < _unlockTime, "Unlock time should be in the future");
 
         unlockTime = _unlockTime;
         owner = payable(msg.sender);
@@ -33,12 +29,6 @@ contract Lock {
         tokenBalances[msg.sender] += 1;
         emit TokenEarned(msg.sender, 1);
     }
-
-    // Nhặt vịt → +3 xu
-    //function collectDuck() external {
-    //    tokenBalances[msg.sender] += 3;
-    //    emit TokenEarned(msg.sender, 3);
-    //}
 
     // Modifier để đảm bảo user luôn có 3 vịt trắng khi liên kết
     modifier ensureInitDuck() {
@@ -51,19 +41,31 @@ contract Lock {
         _;
     }
 
+    // Khởi tạo vịt (gọi khi liên kết lần đầu)
     function initDuck() public ensureInitDuck {
-    // Hàm không làm gì thêm vì ensureInitDuck đã khởi tạo sẵn
+        // Đã khởi tạo trong modifier
     }
 
+    // Kiểm tra người dùng đã khởi tạo vịt chưa
     function hasInitDuck(address user) public view returns (bool) {
         return duckInitialized[user];
     }
 
-    // Mua vịt (trừ ETH trong contract)
+    // Mua vịt bằng ETH đã nạp
     function buyDuck(string memory duckType, uint256 quantity) public ensureInitDuck {
-        // uint256 pricePerDuckWei
-        //uint256 totalCost = quantity * pricePerDuckWei;
-        uint256 totalCost = 0.005 * 1 ether;
+        uint256 pricePerDuckWei;
+
+        if (keccak256(bytes(duckType)) == keccak256(bytes("white"))) {
+            pricePerDuckWei = 0.005 ether;
+        } else if (keccak256(bytes(duckType)) == keccak256(bytes("yellow"))) {
+            pricePerDuckWei = 0.01 ether;
+        } else if (keccak256(bytes(duckType)) == keccak256(bytes("red"))) {
+            pricePerDuckWei = 0.015 ether;
+        } else {
+            revert("Invalid duck type");
+        }
+
+        uint256 totalCost = pricePerDuckWei * quantity;
         require(ethBalances[msg.sender] >= totalCost, "Not enough ETH balance");
 
         ethBalances[msg.sender] -= totalCost;
@@ -72,39 +74,44 @@ contract Lock {
         emit DuckBought(msg.sender, duckType, quantity);
     }
 
-    // Quy đổi xu thành ETH (10 xu = 1 ETH)
-    function convertTokenToETH() external {
-        uint256 tokenAmount = tokenBalances[msg.sender];
-        require(tokenAmount >= 10, "Need at least 10 tokens to convert");
+    // Quy đổi xu sang ETH (10 xu = 0.001 ETH, phí 5% cho owner)
+    function convertTokenToETH(uint256 amount) external {
+        require(amount >= 10, "Need at least 10 tokens to convert");
+        require(tokenBalances[msg.sender] >= amount, "Not enough tokens");
 
-        uint256 ethAmount = tokenAmount / 10; // Phần nguyên
-        uint256 tokensToSpend = ethAmount * 10;
+        uint256 ethPerToken = 0.001 ether / 10; // Mỗi token = 0.0001 ETH
+        uint256 ethAmount = amount * ethPerToken;
 
-        require(address(this).balance >= ethAmount * 1 ether, "Not enough ETH in contract");
+        require(address(this).balance >= ethAmount, "Not enough ETH in contract");
 
-        tokenBalances[msg.sender] -= tokensToSpend;
-        ethBalances[msg.sender] += ethAmount * 1 ether;
+        uint256 fee = (ethAmount * 5) / 100; // 5% phí
+        uint256 userReceives = ethAmount - fee;
 
-        emit Converted(msg.sender, tokensToSpend, ethAmount * 1 ether);
+        tokenBalances[msg.sender] -= amount;
+        ethBalances[msg.sender] += userReceives;
+        ethBalances[owner] += fee;
+
+        emit Converted(msg.sender, amount, userReceives);
     }
 
+
     // Rút ETH đã quy đổi
-     function withdraw(uint256 amount) public payable {
+    function withdraw(uint256 amount) public {
         require(block.timestamp >= unlockTime, "You can't withdraw yet");
         require(ethBalances[msg.sender] >= amount, "Not enough balance");
         require(amount > 0, "Withdraw amount must be greater than zero");
 
-        ethBalances[msg.sender] -= amount; // Trừ số dư trước khi chuyển ETH
-        payable(msg.sender).transfer(amount); // Gửi ETH về ví của user
+        ethBalances[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
 
         emit Withdrawal(msg.sender, amount, block.timestamp);
-    }   
+    }
 
-    // Nạp ETH vào contract để quy đổi
-     function deposit() public payable {
+    // Nạp ETH vào contract
+    function deposit() public payable {
         require(msg.value > 0, "Deposit amount must be greater than zero");
 
-        ethBalances[msg.sender] += msg.value; // Cập nhật số dư user
+        ethBalances[msg.sender] += msg.value;
 
         emit Deposit(msg.sender, msg.value, block.timestamp);
     }

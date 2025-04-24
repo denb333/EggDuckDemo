@@ -36,12 +36,12 @@ export function incrementEggAndCoin(): void {
  * Updates the displayed counters for eggs and coins in the UI.
  */
 export function updateCounters(): void {
-    const eggCountElement = document.querySelector("#eggCounter span") as HTMLElement;
-    const coinCountElement = document.querySelector("#coinCounter span") as HTMLElement;
+    // const eggCountElement = document.querySelector("#eggCounter span") as HTMLElement;
+    // const coinCountElement = document.querySelector("#coinCounter span") as HTMLElement;
     
-    // Update the displayed text values with current counts
-    eggCountElement.innerText = eggCount.toString();
-    coinCountElement.innerText = coinCount.toString();
+    // // Update the displayed text values with current counts
+    // eggCountElement.innerText = eggCount.toString();
+    // coinCountElement.innerText = coinCount.toString();
 }
 
 // Export variables for use in other modules

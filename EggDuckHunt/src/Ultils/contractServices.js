@@ -142,38 +142,18 @@ export const collectEgg = async () => {
 };
 
 // Gọi hàm collectDuck từ smart contract
-export const collectDuck = async () => {
-  try {
-    await ensureInitialized();
-    const tx = await contract.collectDuck();
-    await tx.wait();
-    console.log("Duck collected! +3 tokens");
-  } catch (error) {
-    console.error("Error collecting duck:", error.message);
-  }
-};
-
-// Rút tiền từ contract
-// export const withdrawFund = async (amount) => {
+// export const collectDuck = async () => {
 //   try {
 //     await ensureInitialized();
-
-//     if (!amount || isNaN(amount) || Number(amount) <= 0) {
-//       throw new Error("Invalid withdrawal amount");
-//     }
-
-//     const amountInWei = parseEther(amount.toString());
-//     console.log("Calling withdraw with amount:", amountInWei.toString());
-
-//     const withdrawTx = await contract.withdraw(amountInWei);
-//     await withdrawTx.wait();
-
-//     console.log(`Successfully withdrew ${amount} ETH`);
+//     const tx = await contract.collectDuck();
+//     await tx.wait();
+//     console.log("Duck collected! +3 tokens");
 //   } catch (error) {
-//     console.error("Error withdrawing funds:", error.message);
-//     throw error;
+//     console.error("Error collecting duck:", error.message);
 //   }
 // };
+
+
 export const withdrawFund = async (amount) => {
   try {
     await ensureInitialized();
@@ -197,20 +177,6 @@ export const withdrawFund = async (amount) => {
   }
 };
 
-
-// export const getUserTokenBalance = async () => {
-//   try {
-//     const accounts = await window.ethereum.request({ method: "eth_accounts" });
-//     if (!accounts.length) throw new Error("No accounts found");
-
-//     const balance = await contract.methods.getUserTokenBalance(accounts[0]).call();
-//     // const balance = await contract.getUserTokenBalance(accounts[0]);
-//     return balance;
-//   } catch (error) {
-//     console.error("Error fetching token balance:", error);
-//     return "0";
-//   }
-// };
 export const getUserTokenBalance = async () => {
   try {
     await ensureInitialized(); // Đảm bảo contract đã được khởi tạo
@@ -226,7 +192,7 @@ export const getUserTokenBalance = async () => {
   }
   
 };
-export const buyDuck = async () => {
+export const buyDuck = async (duckType, quantity) => {
   //(duckType, quantity, pricePerDuckWei)
   try {
     await ensureInitialized();
@@ -235,7 +201,7 @@ export const buyDuck = async () => {
 
    // const totalCostWei = BigInt(quantity) * BigInt(pricePerDuckWei);
 
-    const tx = await contract.buyDuck("yellow", 1,{
+    const tx = await contract.buyDuck(duckType, quantity,{
       gasLimit: 300000, // optional
     });
     await tx.wait();

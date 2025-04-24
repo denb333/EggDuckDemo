@@ -1,4 +1,4 @@
-import { depositFund, withdrawFund, getUserBalanceInETH, convertTokenToETH, getUserTokenBalance, getDuckCount, buyDuck } from "../Ultils/contractServices.js";
+import { depositFund, withdrawFund, getUserBalanceInETH, convertTokenToETH, getUserTokenBalance, getDuckCount, buyDuck,collectEgg } from "../Ultils/contractServices.js";
 import { toast } from "react-toastify";
 
 // Khởi tạo state
@@ -8,6 +8,8 @@ let state = {
     userBalance: "0",
     convertAmount: "",
     tokenBalance: "0",
+    duckAmount: "",
+    duckColorSelect:"",
     duckCount: {
         yellow: "0",
         red: "0",
@@ -29,11 +31,35 @@ const updateUI = () => {
         userBalanceElement.textContent = state.userBalance;
     }
 
+    const userBalance1Element = document.getElementById("userBalance1");
+    if (userBalance1Element) {
+        userBalance1Element.textContent = state.userBalance;
+    }
+
+    const userBalance2Element = document.getElementById("userBalance2");
+    if (userBalance2Element) {
+        userBalance2Element.textContent = state.userBalance;
+    }
     // Cập nhật tokenBalance
     const tokenBalanceElement = document.getElementById("tokenBalance");
     if (tokenBalanceElement) {
         tokenBalanceElement.textContent = state.tokenBalance;
     }
+
+    const tokenBalance1Element = document.getElementById("tokenBalance1");
+    if (tokenBalance1Element) {
+        tokenBalance1Element.textContent = state.tokenBalance;
+    }
+    //get colorDuck
+    const duckRadios = document.querySelectorAll('input[name="duckColor"]');
+    duckRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.checked) {
+                setState({ duckColorSelect: radio.value });
+                console.log("Màu: ", radio.value.toString());
+            }
+        });
+    });
 
     // Cập nhật nút actionButton dựa trên action
     const actionButton = document.getElementById("actionButton");
@@ -101,10 +127,11 @@ const initialize = async () => {
     await updateUserBalance();
     await updateTokenBalance();
     await updateDuckCount();
-    console.log("Token balance updated:", state.tokenBalance);
+  
 
     // Gán sự kiện cho các phần tử HTML
     const amountInput = document.getElementById("amountInput");
+    const duckAmount = document.getElementById("duckCount");
     const convertAmountInput = document.getElementById("convertAmountInput");
     const depositRadio = document.getElementById("depositRadio");
     const withdrawRadio = document.getElementById("withdrawRadio");
@@ -115,6 +142,12 @@ const initialize = async () => {
     if (amountInput) {
         amountInput.addEventListener("input", (e) => {
             setAmount(e.target.value);
+        });
+    }
+    
+    if (duckAmount) {
+        duckAmount.addEventListener("input", (e) => {
+            setDuckAmount(e.target.value);
         });
     }
 
@@ -141,9 +174,12 @@ const initialize = async () => {
     }
 
     if (convertButton) {
-        convertButton.addEventListener("click", handleConvert);
+         
+         convertButton.addEventListener("click", handleConvert);
+       
     }
     if (buyDuckButton) {
+        console.log(state.duckColorSelect.toString(), state.duckAmount.toString());
         buyDuckButton.addEventListener("click", handleBuyDuck);
     }
 };
@@ -180,8 +216,8 @@ const handleAction = async () => {
 // Xử lý sự kiện mua duck
 const handleBuyDuck = async () => {
     try {
-      await buyDuck();
-      toast.success("You bought a duck (-5 tokens)!");
+      await buyDuck(state.duckColorSelect.toString(), state.duckAmount.toString());
+      toast.success("You bought a duck successfull)!");
       await updateTokenBalance();
       await updateDuckCount();
     } catch (error) {
@@ -189,7 +225,16 @@ const handleBuyDuck = async () => {
       toast.error(message);
     }
 };
-
+const handlecollectEgg = async () => {
+    try {
+      await collectEgg();
+      toast.success("You bought a duck successfull)!");
+      await updateTokenBalance();
+    } catch (error) {
+      const message = error?.data?.message || error?.reason || "Failed to buy duck";
+      toast.error(message);
+    }
+};
 
 // Xử lý convert token sang ETH
 const handleConvert = async () => {
@@ -223,6 +268,10 @@ const setConvertAmount = (value) => {
     setState({ convertAmount: value });
 };
 
+const setDuckAmount = (value) => {
+    setState({ duckAmount: value });
+};
+
 const setAction = (value) => {
     setState({ action: value });
 };
@@ -245,4 +294,6 @@ export {
     setAction,
     state,
     handleBuyDuck,
+    setDuckAmount,
+    handlecollectEgg
 };
